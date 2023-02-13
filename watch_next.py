@@ -21,13 +21,27 @@ def main():
         for line in openfile:
             movie_list.append(line.strip("\n"))
 
+    # Get the score and the index of the movie to watch next.
+    score, index_new_movie = get_movie_to_watch(token_watched, movie_list)
+
+    # Get the description of the movie.
+    movie_to_watch = movie_list[index_new_movie]
+
+    # Print result.
+    print(f"Whith a score of {score:.3f} the movie to watch next is: '{movie_to_watch[:7]}'\nDescription:\n{movie_to_watch[9:]}")
+
+
+# This function calculate the similarity between the watched movie and a given list of movies,
+# and returns the highest score and the index of the corresponding movie.
+def get_movie_to_watch(t_watched, movies):
+
     # Initialize a variable for the list of similarities.
     similarities = []    
 
     # Calculate the similarity between the 'planet_hulk' and the movies in 'movie_list'.
-    for movie in movie_list:
+    for movie in movies:
         token_new = nlp(movie)
-        similarity = token_watched.similarity(token_new)
+        similarity = t_watched.similarity(token_new)
         
         # Add the similarity to the list 'similarities' in order to find the highest value.
         similarities.append(similarity)
@@ -36,13 +50,7 @@ def main():
     highest_score = max(similarities)
 
     # Get the index of the highest value to use to identify the movie with the highest similarity.
-    index_max = similarities.index(highest_score)
-
-    # Get the description of the movie.
-    movie_to_watch = movie_list[index_max]
-
-    # Print result.
-    print(f"Whith a score of {highest_score:.3f} the movie to watch next is: '{movie_to_watch[:8]}'\nDescription:\n{movie_to_watch[9:]}")
+    return highest_score, similarities.index(highest_score)
 
 
 if __name__ == "__main__":
